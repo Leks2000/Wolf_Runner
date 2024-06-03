@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     public float fallSpeed;
 
     private Vector3 targetPosition;
-    private bool isGrounded;
 
     void Start()
     {
@@ -31,6 +30,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!PlayerManager.isGameStarted)
+            return;
+
         // Gradually increase the forward speed
         forwardSpeed += SpeedModifier * Time.deltaTime;
         forwardSpeed = Mathf.Min(forwardSpeed, maxSpeed);

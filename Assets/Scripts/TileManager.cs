@@ -40,7 +40,7 @@ public class TileManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerTransform.position.z - 35 > zSpawn - (numberOfTiles * tileLength))
+        if (playerTransform.position.z - 45 > zSpawn - (numberOfTiles * tileLength))
         {
             SpawnTile(UnityEngine.Random.Range(0, tilePrefabs.Length));
             SpawnRoadsideTiles(UnityEngine.Random.Range(0, roadsideTilePrefabs.Length),
@@ -58,8 +58,8 @@ public class TileManager : MonoBehaviour
 
     public void SpawnRoadsideTiles(int leftTileIndex, int rightTileIndex)
     {
-        GameObject left = Instantiate(roadsideTilePrefabs[leftTileIndex], new Vector3(0.5F + (tileLength / 4), 0, tileLength * roadsideTilesCreated), transform.rotation);
-        GameObject right = Instantiate(roadsideTilePrefabs[rightTileIndex], new Vector3(-(0.5F + (tileLength / 4)), 0, tileLength * roadsideTilesCreated), transform.rotation);
+        GameObject left = Instantiate(roadsideTilePrefabs[leftTileIndex], new Vector3(0.35F + (tileLength / 8.12f), 0, tileLength * roadsideTilesCreated - 10), transform.rotation);
+        GameObject right = Instantiate(roadsideTilePrefabs[rightTileIndex], new Vector3(-(0.35F + (tileLength / 1.535f)), 0, tileLength * roadsideTilesCreated - 10), transform.rotation);
         
         activeTiles.Add(left);
         activeTiles.Add(right);

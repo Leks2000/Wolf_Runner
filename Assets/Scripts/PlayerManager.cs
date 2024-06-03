@@ -14,9 +14,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private GameObject MenuPanel;
 
+    public static bool isGameStarted;
     public GameObject startingText;
 
     public static int numberOfCoins;
+    private int Diamonds;
     public int timeOfGame;
     public float timer;
 
@@ -26,7 +28,6 @@ public class PlayerManager : MonoBehaviour
 
     public int speed;
 
-    private static string playerName;
     bool alreadyDone = false;
 
     // Start is called before the first frame update
@@ -39,6 +40,7 @@ public class PlayerManager : MonoBehaviour
 
         gameOver = false;
         Time.timeScale = 1;
+        isGameStarted = false;
         numberOfCoins = 0;
     }
 
@@ -47,12 +49,18 @@ public class PlayerManager : MonoBehaviour
     {
         UpdateTime();
         UpdateSpeed();
-
+        if (numberOfCoins > 0)
+        {
+            Diamonds = numberOfCoins;
+        }
         if (gameOver)
         {
             Time.timeScale = 0;
             if (!alreadyDone)
             {
+                Diamonds += PlayerPrefs.GetInt("Diamonds");
+                PlayerPrefs.SetInt("Diamonds", Diamonds);
+                PlayerPrefs.Save();
                 Events eventsObject = FindObjectOfType<Events>();
                 eventsObject.UnhideGameOverPanel();
                 alreadyDone = true;
@@ -62,12 +70,16 @@ public class PlayerManager : MonoBehaviour
         coinsText.text = "Coins: " + numberOfCoins;
         timeText.text = "Time: " + FormatTimeText();
         speedText.text = "Speed: " + FormatSpeedText();
+        StartCoroutine(StartGame());
     }
 
     void UpdateTime()
     {
-        timer += Time.deltaTime;
-        timeOfGame = Convert.ToInt32(timer);
+        if (isGameStarted)
+        {
+            timer += Time.deltaTime;
+            timeOfGame = Convert.ToInt32(timer);
+        }
     }
 
     void UpdateSpeed()
@@ -107,7 +119,11 @@ public class PlayerManager : MonoBehaviour
 
     public void PlayAgain()
     {
-        SceneManager.LoadScene("Runner");
+        SceneManager.LoadScene(1);
+    }
+    public void OpenMenu()
+    {
+        SceneManager.LoadScene(0);
     }
     public void Pause()
     {
@@ -121,4 +137,25 @@ public class PlayerManager : MonoBehaviour
         MenuPanel.SetActive(false);
 
     }
+    private IEnumerator StartGame()
+    {
+
+        if (SwipeManager.tap)
+        {
+            if (!isGameStarted)
+            {
+                var am = FindObjectOfType<AudioManager>();
+                StartCoroutine(AudioManager.FadeOut(am.GetComponent<AudioSource>(), 1, 0.2f));
+                am.PlaySound("StartingUp");
+
+                yield return new WaitForSeconds(1);
+
+                isGameStarted = true;
+
+                Destroy(startingText);
+            }
+        }
+
+    }
+
 }

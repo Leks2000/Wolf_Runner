@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
     [SerializeField]
-    private GameObject Wolf;
-
-    void Update()
-    {
-        Wolf.transform.Rotate(0, 0, 0.1f);
-    }
+    private Text Diamonds;
 
     public void StartGame()
     {
         SceneManager.LoadScene("Runner");
+    }
+
+    public void GetDiamonds()
+    {
+        Diamonds.text = PlayerPrefs.GetInt("Diamonds").ToString();
     }
 }
