@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public float displayedSpeed = 0;
 
     private int desiredLane = 1; // Start in the middle lane
-    public float laneDistance = 4; // Distance between two lanes
+    public float laneDistance = 10f; // Distance between two lanes
 
     public float jumpForce;
     public float gravity;
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
         targetPosition = new Vector3((desiredLane - 1) * laneDistance, transform.position.y, transform.position.z + forwardSpeed * Time.deltaTime);
 
         // Smoothly move the player to the target lane position
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, 10 * Time.deltaTime);
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, 8 * Time.deltaTime);
         controller.Move((smoothedPosition - transform.position) + direction * Time.deltaTime);
     }
 
@@ -118,7 +118,6 @@ public class PlayerController : MonoBehaviour
             PlayerManager.gameOver = true;
         }
     }
-
     void OnTriggerStay(Collider other)
     {
         Vector3 newPosition = other.transform.localPosition;

@@ -13,6 +13,8 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField]
     private GameObject MenuPanel;
+    [SerializeField]
+    private GameObject MenuBtn;
 
     public static bool isGameStarted;
     public GameObject startingText;
@@ -29,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     public int speed;
 
     bool alreadyDone = false;
+    bool TouchedToStart = false;
 
     // Start is called before the first frame update
     void Start()
@@ -142,20 +145,31 @@ public class PlayerManager : MonoBehaviour
 
         if (SwipeManager.tap)
         {
-            if (!isGameStarted)
+            if (!isGameStarted & !TouchedToStart)
             {
                 var am = FindObjectOfType<AudioManager>();
                 StartCoroutine(AudioManager.FadeOut(am.GetComponent<AudioSource>(), 1, 0.2f));
                 am.PlaySound("StartingUp");
+
+                TouchedToStart = true;
 
                 yield return new WaitForSeconds(1);
 
                 isGameStarted = true;
 
                 Destroy(startingText);
+
+                yield return new WaitForSeconds(2f);
+
+                MenuBtn.SetActive(true);
             }
         }
 
     }
 
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt("Diamonds", numberOfCoins);
+        PlayerPrefs.Save();
+    }
 }
