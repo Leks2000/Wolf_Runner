@@ -1,15 +1,10 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEditor.PackageManager.Requests;
-//using static UnityEditor.EditorApplication;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SwipeManager : MonoBehaviour
 {
     public static bool tap, swipeLeft, swipeRight, swipeUp, swipeDown;
     private bool isDraging = false;
-    private Vector2 startTouch, swipeDelta;
-    private CameraController controller;
+    private Vector2 startTouch, swipeDelta;    
 
     private void Update()
     {

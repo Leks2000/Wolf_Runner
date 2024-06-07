@@ -7,24 +7,34 @@ public class ShopMenu : MonoBehaviour
     public Text priceText;
     private GameObject[] characters;
     private int[] characterPrices;
-    private bool[] charactersPurchased; // Массив для хранения информации о покупке каждого персонажа
+    private bool[] charactersPurchased;
     private int index;
+    [SerializeField]
+    private Text Diamonds;
 
-    // Массив цен для каждого персонажа
-    private int[] defaultCharacterPrices = { 100, 150, 200 }; // Пример цен для 3 персонажей
+    private int[] defaultCharacterPrices = { 0, 250, 500, 1000 };
 
     private void Start()
     {
-        index = PlayerPrefs.GetInt("CharacterSelected", 0); // Если нет сохраненного значения, то по умолчанию выбирается первый персонаж
+        Time.timeScale = 1f;
+        index = PlayerPrefs.GetInt("CharacterSelected", 0);
         characters = new GameObject[transform.childCount];
-        characterPrices = defaultCharacterPrices; // Используем значения из массива defaultCharacterPrices
+        characterPrices = defaultCharacterPrices;
 
-        charactersPurchased = new bool[characterPrices.Length]; // Создаем массив для хранения информации о покупке каждого персонажа
+        charactersPurchased = new bool[characterPrices.Length];
 
         // Загрузка информации о покупках из PlayerPrefs
         for (int i = 0; i < characterPrices.Length; i++)
         {
-            charactersPurchased[i] = PlayerPrefs.GetInt("Character" + i + "Purchased", 0) == 1;
+            if (i == 0) // Установите первый скин как купленный по умолчанию
+            {
+                charactersPurchased[i] = true;
+                PlayerPrefs.SetInt("Character" + i + "Purchased", 1);
+            }
+            else
+            {
+                charactersPurchased[i] = PlayerPrefs.GetInt("Character" + i + "Purchased", 0) == 1;
+            }
         }
 
         for (int i = 0; i < transform.childCount; i++)
@@ -40,18 +50,7 @@ public class ShopMenu : MonoBehaviour
         if (characters[index])
         {
             characters[index].SetActive(true);
-            if (priceText != null)
-            {
-                // Проверяем, куплен ли уже персонаж, и если да, то показываем пустую строку
-                if (charactersPurchased[index])
-                {
-                    priceText.text = "";
-                }
-                else
-                {
-                    priceText.text = "" + characterPrices[index].ToString(); // Обновление текста с ценой
-                }
-            }
+            UpdatePriceText();
         }
     }
 
@@ -64,18 +63,7 @@ public class ShopMenu : MonoBehaviour
             index = characters.Length - 1;
         }
         characters[index].SetActive(true);
-        if (priceText != null)
-        {
-            // Проверяем, куплен ли уже персонаж, и если да, то показываем пустую строку
-            if (charactersPurchased[index])
-            {
-                priceText.text = "";
-            }
-            else
-            {
-                priceText.text = "" + characterPrices[index].ToString();
-            }
-        }
+        UpdatePriceText();
     }
 
     public void SelectRight()
@@ -87,46 +75,50 @@ public class ShopMenu : MonoBehaviour
             index = 0;
         }
         characters[index].SetActive(true);
-        if (priceText != null)
-        {
-            // Проверяем, куплен ли уже персонаж, и если да, то показываем пустую строку
-            if (charactersPurchased[index])
-            {
-                priceText.text = "";
-            }
-            else
-            {
-                priceText.text = "" + characterPrices[index].ToString();
-            }
-        }
+        UpdatePriceText();
     }
 
     public void StartScene()
     {
         if (!charactersPurchased[index] && PlayerPrefs.GetInt("Diamonds") >= characterPrices[index])
         {
-            charactersPurchased[index] = true; // Отмечаем персонажа как купленного
-            PlayerPrefs.SetInt("Character" + index + "Purchased", 1); // Сохраняем информацию о покупке
+            charactersPurchased[index] = true;
+            PlayerPrefs.SetInt("Character" + index + "Purchased", 1);
             PlayerPrefs.SetInt("CharacterSelected", index);
             PlayerPrefs.SetInt("Diamonds", PlayerPrefs.GetInt("Diamonds") - characterPrices[index]);
 
-            // Обновляем текстовое поле с новой ценой или пустой строкой
-            if (priceText != null)
-            {
-                priceText.text = "";
-            }
-
-            SceneManager.LoadScene(1);
+            UpdatePriceText();
+            SceneManager.LoadScene("LoadScene");
         }
         else if (charactersPurchased[index])
         {
-            // Если персонаж уже куплен, то загружаем сцену без вычитания алмазов
             PlayerPrefs.SetInt("CharacterSelected", index);
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene("LoadScene");
         }
-        else
+    }
+
+    public void Play()
+    {
+        SceneManager.LoadScene("LoadScene");
+    }
+
+    public void GetDiamonds()
+    {
+        Diamonds.text = PlayerPrefs.GetInt("Diamonds").ToString();
+    }
+
+    private void UpdatePriceText()
+    {
+        if (priceText != null)
         {
-            Debug.Log("Not enough diamonds!");
+            if (charactersPurchased[index])
+            {
+                priceText.text = "";
+            }
+            else
+            {
+                priceText.text = characterPrices[index].ToString();
+            }
         }
     }
 }

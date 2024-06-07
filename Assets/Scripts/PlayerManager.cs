@@ -1,43 +1,49 @@
 ﻿using System;
 using System.Collections;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using YG;
 
 public class PlayerManager : MonoBehaviour
 {
     public static bool gameOver;
     [SerializeField]
     private GameObject gameOverPanel;
+    [SerializeField]
+    private const string ScoreTable = "RunnerLB";
 
     [SerializeField]
     private GameObject MenuPanel;
     [SerializeField]
     private GameObject MenuBtn;
+    [SerializeField]
+    private GameObject RewardBtn;
 
     public static bool isGameStarted;
     public GameObject startingText;
 
     public static int numberOfCoins;
-    private int Diamonds;
-    public int timeOfGame;
+    public int Diamonds;
+    public int Score;
     public float timer;
 
     public Text coinsText;
-    public Text timeText;
+    public Text ScoreText;
     public Text speedText;
 
     public int speed;
 
     bool alreadyDone = false;
     bool TouchedToStart = false;
+    [SerializeField]
+    private LoadingManager loading;
 
     // Start is called before the first frame update
     void Start()
     {
         timer = 0.0f;
-        timeOfGame = 0;
+        Score = 0;
 
         speed = 0;
 
@@ -50,7 +56,7 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateTime();
+        UpdateScore();
         UpdateSpeed();
         if (numberOfCoins > 0)
         {
@@ -61,27 +67,28 @@ public class PlayerManager : MonoBehaviour
             Time.timeScale = 0;
             if (!alreadyDone)
             {
-                Diamonds += PlayerPrefs.GetInt("Diamonds");
-                PlayerPrefs.SetInt("Diamonds", Diamonds);
-                PlayerPrefs.Save();
                 Events eventsObject = FindObjectOfType<Events>();
                 eventsObject.UnhideGameOverPanel();
+                if (numberOfCoins > 0)
+                    RewardBtn.SetActive(true);
                 alreadyDone = true;
+                YandexGame.NewLeaderboardScores(ScoreTable, Score);
             }
         }
 
-        coinsText.text = "Coins: " + numberOfCoins;
-        timeText.text = "Time: " + FormatTimeText();
+        coinsText.text = "Diamonds: " + numberOfCoins;
         speedText.text = "Speed: " + FormatSpeedText();
+        ScoreText.text = "Score: " + Score;
         StartCoroutine(StartGame());
     }
 
-    void UpdateTime()
+    void UpdateScore()
     {
-        if (isGameStarted)
+        if (isGameStarted && !gameOver)
         {
             timer += Time.deltaTime;
-            timeOfGame = Convert.ToInt32(timer);
+            int seconds = Mathf.FloorToInt(timer);
+            Score = (int)timer + (numberOfCoins * 2);
         }
     }
 
@@ -89,7 +96,7 @@ public class PlayerManager : MonoBehaviour
     {
         GameObject player = GameObject.Find("Player");
         PlayerController controller = player.GetComponent<PlayerController>();
-        speed = Convert.ToInt32(controller.displayedSpeed);
+        speed = (int)(controller.displayedSpeed);
     }
 
     string FormatSpeedText()
@@ -115,18 +122,16 @@ public class PlayerManager : MonoBehaviour
         return string.Format("{0} km/h", speed);
     }
 
-    string FormatTimeText()
-    {
-        return (timeOfGame.ToString()).PadLeft(3, ' ') + "s";
-    }
-
     public void PlayAgain()
     {
-        SceneManager.LoadScene(1);
+        YandexGame.FullscreenShow();
+        SaveDiamonds();
+        SceneManager.LoadScene("Runner");
     }
     public void OpenMenu()
     {
-        SceneManager.LoadScene(0);
+        SaveDiamonds();
+        SceneManager.LoadScene("MainMenu");
     }
     public void Pause()
     {
@@ -138,7 +143,6 @@ public class PlayerManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         MenuPanel.SetActive(false);
-
     }
     private IEnumerator StartGame()
     {
@@ -166,10 +170,14 @@ public class PlayerManager : MonoBehaviour
         }
 
     }
-
+    private void SaveDiamonds()
+    {
+        Diamonds += PlayerPrefs.GetInt("Diamonds");
+        PlayerPrefs.SetInt("Diamonds", Diamonds);
+        PlayerPrefs.Save();
+    }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt("Diamonds", numberOfCoins);
-        PlayerPrefs.Save();
+        SaveDiamonds();
     }
 }

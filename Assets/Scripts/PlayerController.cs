@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         // Gradually increase the forward speed
         forwardSpeed += SpeedModifier * Time.deltaTime;
         forwardSpeed = Mathf.Min(forwardSpeed, maxSpeed);
-        displayedSpeed = forwardSpeed * 10;
+        displayedSpeed = forwardSpeed * 2.5f;
 
         direction.z = forwardSpeed;
 
@@ -50,8 +50,6 @@ public class PlayerController : MonoBehaviour
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, 8 * Time.deltaTime);
         controller.Move((smoothedPosition - transform.position) + direction * Time.deltaTime);
     }
-
-
 
     private void PerformTurn()
     {
@@ -107,9 +105,9 @@ public class PlayerController : MonoBehaviour
         direction.y = jumpForce;
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    private void OnTriggerEnter(Collider other)
     {
-        if (hit.transform.tag == "Obstacle")
+        if (other.transform.tag == "Obstacle")
         {
             var am = FindObjectOfType<AudioManager>();
             am.PlaySound("Crash");
@@ -117,12 +115,5 @@ public class PlayerController : MonoBehaviour
 
             PlayerManager.gameOver = true;
         }
-    }
-    void OnTriggerStay(Collider other)
-    {
-        Vector3 newPosition = other.transform.localPosition;
-        newPosition.z = Mathf.Lerp(other.transform.localPosition.z, transform.localPosition.z, Time.deltaTime * 1);
-
-        other.transform.localPosition = newPosition;
     }
 }
