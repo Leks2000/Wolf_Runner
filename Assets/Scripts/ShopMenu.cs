@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
+using System.Collections;
 
 public class ShopMenu : MonoBehaviour
 {
-    public Text priceText;
+    public TextMeshProUGUI priceText;
     private GameObject[] characters;
     private int[] characterPrices;
     private bool[] charactersPurchased;
     private int index;
     [SerializeField]
-    private Text Diamonds;
+    PositionManager positionManager;
+    [SerializeField]
+    private TextMeshProUGUI Diamonds;
 
-    private int[] defaultCharacterPrices = { 0, 250, 500, 1000 };
+    private int[] defaultCharacterPrices = { 0, 250, 500, 1000 ,1500};
 
     private void Start()
     {
@@ -88,18 +92,13 @@ public class ShopMenu : MonoBehaviour
             PlayerPrefs.SetInt("Diamonds", PlayerPrefs.GetInt("Diamonds") - characterPrices[index]);
 
             UpdatePriceText();
-            SceneManager.LoadScene("LoadScene");
+            StartCoroutine(FindObjectOfType<LoadingManager>().LoadMenuSceneAfterSound("Runner"));
         }
         else if (charactersPurchased[index])
         {
             PlayerPrefs.SetInt("CharacterSelected", index);
-            SceneManager.LoadScene("LoadScene");
+            StartCoroutine(FindObjectOfType<LoadingManager>().LoadMenuSceneAfterSound("Runner"));
         }
-    }
-
-    public void Play()
-    {
-        SceneManager.LoadScene("LoadScene");
     }
 
     public void GetDiamonds()

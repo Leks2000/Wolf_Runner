@@ -83,7 +83,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            gameObject.GetComponent<AudioSource>().volume = 0.2f;
+            gameObject.GetComponent<AudioSource>().volume = 0.6f;
             this.soundOnOffBtn.GetComponent<Image>().sprite = this.soundOnImg;
         }
 

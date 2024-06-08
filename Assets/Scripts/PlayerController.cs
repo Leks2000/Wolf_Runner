@@ -43,10 +43,7 @@ public class PlayerController : MonoBehaviour
         PerformJump();
         PerformTurn();
 
-        // Calculate the target position for smooth lane change
         targetPosition = new Vector3((desiredLane - 1) * laneDistance, transform.position.y, transform.position.z + forwardSpeed * Time.deltaTime);
-
-        // Smoothly move the player to the target lane position
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, 8 * Time.deltaTime);
         controller.Move((smoothedPosition - transform.position) + direction * Time.deltaTime);
     }
@@ -85,7 +82,7 @@ public class PlayerController : MonoBehaviour
     {
         if (controller.isGrounded)
         {
-            direction.y = -1; // Ensure the player stays grounded
+            direction.y = -1;
             if (Input.GetKeyDown(KeyCode.UpArrow) || SwipeManager.swipeUp)
                 Jump();
         }
@@ -93,7 +90,6 @@ public class PlayerController : MonoBehaviour
         {
             direction.y += gravity * Time.deltaTime;
 
-            // If the player is in the air and a downward swipe is performed, accelerate the fall
             if (Input.GetKeyDown(KeyCode.DownArrow) || SwipeManager.swipeDown)
                 direction.y = -fallSpeed;
         }

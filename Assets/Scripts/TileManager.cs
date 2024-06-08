@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
-    private List<GameObject> activeTiles = new List<GameObject>();
-    
+    private Queue<GameObject> activeTiles = new Queue<GameObject>();
+
     public Transform playerTransform;
     public GameObject[] tilePrefabs;
     public GameObject[] roadsideTilePrefabs;
 
     public float zSpawn = 0;
     public float tileLength = 30;
-    
+
     public int numberOfTiles;
     public int numberOfRoadsideTiles;
     int roadsideTilesCreated = 0;
@@ -21,7 +19,7 @@ public class TileManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < numberOfTiles; i++)
+        for (int i = 0; i < numberOfTiles; i++)
         {
             if (i == 0)
             {
@@ -30,9 +28,9 @@ public class TileManager : MonoBehaviour
             }
             else
             {
-                SpawnTile(UnityEngine.Random.Range(0, tilePrefabs.Length));
-                SpawnRoadsideTiles(UnityEngine.Random.Range(0, roadsideTilePrefabs.Length),
-                    UnityEngine.Random.Range(0, roadsideTilePrefabs.Length));
+                SpawnTile(Random.Range(0, tilePrefabs.Length));
+                SpawnRoadsideTiles(Random.Range(0, roadsideTilePrefabs.Length),
+                    Random.Range(0, roadsideTilePrefabs.Length));
             }
         }
     }
@@ -42,9 +40,9 @@ public class TileManager : MonoBehaviour
     {
         if (playerTransform.position.z - 45 > zSpawn - (numberOfTiles * tileLength))
         {
-            SpawnTile(UnityEngine.Random.Range(0, tilePrefabs.Length));
-            SpawnRoadsideTiles(UnityEngine.Random.Range(0, roadsideTilePrefabs.Length),
-                UnityEngine.Random.Range(0, roadsideTilePrefabs.Length));
+            SpawnTile(Random.Range(0, tilePrefabs.Length));
+            SpawnRoadsideTiles(Random.Range(0, roadsideTilePrefabs.Length),
+                Random.Range(0, roadsideTilePrefabs.Length));
             DeleteTiles();
         }
     }
@@ -52,7 +50,7 @@ public class TileManager : MonoBehaviour
     public void SpawnTile(int tileIndex)
     {
         GameObject go = Instantiate(tilePrefabs[tileIndex], transform.forward * zSpawn, transform.rotation);
-        activeTiles.Add(go);
+        activeTiles.Enqueue(go);
         zSpawn += tileLength;
     }
 
@@ -60,20 +58,23 @@ public class TileManager : MonoBehaviour
     {
         GameObject left = Instantiate(roadsideTilePrefabs[leftTileIndex], new Vector3(0.35F + (tileLength / 8.12f), 0, tileLength * roadsideTilesCreated - 10), transform.rotation);
         GameObject right = Instantiate(roadsideTilePrefabs[rightTileIndex], new Vector3(-(0.35F + (tileLength / 1.535f)), 0, tileLength * roadsideTilesCreated - 10), transform.rotation);
-        
-        activeTiles.Add(left);
-        activeTiles.Add(right);
+
+        activeTiles.Enqueue(left);
+        activeTiles.Enqueue(right);
 
         roadsideTilesCreated++;
     }
 
-    //removing three tiles at once (main and two from roadsides)
     private void DeleteTiles()
     {
-        for (int i = 0; i < 2; i++)
+        // Удаляем один основной и два боковых тайла
+        for (int i = 0; i < 3; i++)
         {
-            Destroy(activeTiles[i]);
-            activeTiles.RemoveAt(i);
+            if (activeTiles.Count > 0)
+            {
+                GameObject tileToDelete = activeTiles.Dequeue();
+                Destroy(tileToDelete);
+            }
         }
     }
 }

@@ -36,10 +36,14 @@ public class PlayerManager : MonoBehaviour
 
     bool alreadyDone = false;
     bool TouchedToStart = false;
-    [SerializeField]
-    private LoadingManager loading;
 
-    // Start is called before the first frame update
+    private bool reviewRequested = false;
+    [SerializeField]
+    private PositionManager positionManager;
+    [SerializeField]
+    AudioManager audioManager;
+
+
     void Start()
     {
         timer = 0.0f;
@@ -51,9 +55,16 @@ public class PlayerManager : MonoBehaviour
         Time.timeScale = 1;
         isGameStarted = false;
         numberOfCoins = 0;
+
+        if (!reviewRequested && YandexGame.SDKEnabled && gameOver && Score >= 25)
+        {
+            PlayerPrefs.SetInt("ReviewRequested", 1);
+            YandexGame.ReviewShow(true);
+            PlayerPrefs.Save();
+        }
+
     }
 
-    // Update is called once per frame
     void Update()
     {
         UpdateScore();
@@ -69,16 +80,25 @@ public class PlayerManager : MonoBehaviour
             {
                 Events eventsObject = FindObjectOfType<Events>();
                 eventsObject.UnhideGameOverPanel();
+                audioManager.PauseAudio();
                 if (numberOfCoins > 0)
                     RewardBtn.SetActive(true);
                 alreadyDone = true;
                 YandexGame.NewLeaderboardScores(ScoreTable, Score);
             }
         }
-
-        coinsText.text = "Diamonds: " + numberOfCoins;
-        speedText.text = "Speed: " + FormatSpeedText();
-        ScoreText.text = "Score: " + Score;
+        if (YandexGame.EnvironmentData.language == "ru")
+        {
+            coinsText.text = "Алмазы: " + numberOfCoins;
+            speedText.text = "Скорость: " + FormatSpeedText();
+            ScoreText.text = "Очки: " + Score;
+        }
+        else
+        {
+            coinsText.text = "Diamonds: " + numberOfCoins;
+            speedText.text = "Speed: " + FormatSpeedText();
+            ScoreText.text = "Score: " + Score;
+        }
         StartCoroutine(StartGame());
     }
 
@@ -105,12 +125,12 @@ public class PlayerManager : MonoBehaviour
 
         switch (speed)
         {
-            case int s when (s < 220 && s >= 150):
+            case int s when (s < 75 && s >= 50):
                 speedText.color = orange;
                 speedText.fontSize = 55;
                 break;
 
-            case int s when (s <= 300 && s >= 220):
+            case int s when (s <= 100 && s >= 75):
                 speedText.color = Color.red;
                 speedText.fontSize = 65;
                 break;
@@ -118,20 +138,26 @@ public class PlayerManager : MonoBehaviour
             default:
                 break;
         }
-
-        return string.Format("{0} km/h", speed);
+        if (YandexGame.EnvironmentData.language == "ru")
+        {
+            return string.Format("{0} км/ч", speed);
+        }
+        else
+        {
+            return string.Format("{0} km/h", speed);
+        }
     }
 
     public void PlayAgain()
     {
-        YandexGame.FullscreenShow();
         SaveDiamonds();
-        SceneManager.LoadScene("Runner");
+        YandexGame.FullscreenShow();
+        LoadingManager.LoadingScene("Runner");
     }
     public void OpenMenu()
     {
         SaveDiamonds();
-        SceneManager.LoadScene("MainMenu");
+        LoadingManager.LoadingScene("MainMenu");
     }
     public void Pause()
     {
@@ -152,7 +178,7 @@ public class PlayerManager : MonoBehaviour
             if (!isGameStarted & !TouchedToStart)
             {
                 var am = FindObjectOfType<AudioManager>();
-                StartCoroutine(AudioManager.FadeOut(am.GetComponent<AudioSource>(), 1, 0.2f));
+
                 am.PlaySound("StartingUp");
 
                 TouchedToStart = true;

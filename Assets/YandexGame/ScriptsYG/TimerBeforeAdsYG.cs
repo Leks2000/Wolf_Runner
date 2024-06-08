@@ -23,6 +23,11 @@ public class TimerBeforeAdsYG : MonoBehaviour
     private UnityEvent onHideTimer;
     private int objSecCounter;
 
+    [SerializeField]
+    private GameObject continueBtn;
+    [SerializeField]
+    AudioManager audioManager;
+
     private void Start()
     {
         if (secondsPanelObject)
@@ -80,11 +85,14 @@ public class TimerBeforeAdsYG : MonoBehaviour
             if (objSecCounter == secondObjects.Length)
             {
                 YandexGame.FullscreenShow();
+                continueBtn.SetActive(true);
                 StartCoroutine(BackupTimerClosure());
 
                 while (!YandexGame.nowFullAd)
                     yield return null;
 
+                Time.timeScale = 0;
+                audioManager.PauseAudio();
                 RestartTimer();
                 yield break;
             }
@@ -110,5 +118,11 @@ public class TimerBeforeAdsYG : MonoBehaviour
         onHideTimer?.Invoke();
         objSecCounter = 0;
         StartCoroutine(CheckTimerAd());
+    }
+    public void ContinueGame()
+    {
+        continueBtn.SetActive(false);
+        audioManager.ResumeAudio();
+        Time.timeScale = 1;
     }
 }

@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
-using YG;
 
 public class LoadingManager : MonoBehaviour
-{   
+{
     [Header("Загружаемая сцена")]
     [Header("Остальные обьекты")]
     [SerializeField]
@@ -13,20 +12,22 @@ public class LoadingManager : MonoBehaviour
     [SerializeField]
     private Text loadingText;
 
+    private static string sceneToLoad; // Статическая переменная для хранения имени сцены
+
     private void Start()
     {
-        Application.targetFrameRate = -1;
         Application.targetFrameRate = 60;
         if (loadingText != null)
         {
             StartCoroutine(UpdateLoadingText());
-            StartCoroutine(LoadSceneAsync("Runner"));
+            StartCoroutine(LoadSceneAsync(sceneToLoad)); // Используем сохранённое имя сцены
         }
     }
 
     public static void LoadingScene(string nameScene)
     {
-        SceneManager.LoadScene("LoadScene");
+        sceneToLoad = nameScene; // Сохраняем имя сцены для загрузки
+        SceneManager.LoadScene("LoadScene"); // Загружаем сцену загрузки
     }
 
     IEnumerator LoadSceneAsync(string nameScene)
@@ -56,5 +57,10 @@ public class LoadingManager : MonoBehaviour
             loadingText.text = baseText + new string('.', dotCount);
             yield return new WaitForSeconds(0.5f); // время обновления текста
         }
+    }
+    public IEnumerator LoadMenuSceneAfterSound(string Scene)
+    {
+        yield return new WaitForSeconds(0.5f);
+        LoadingScene(Scene);
     }
 }

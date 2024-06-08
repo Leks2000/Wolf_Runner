@@ -707,6 +707,94 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingImage: {fileID: 909722621}
   loadingText: {fileID: 173123105}
+--- !u!1 &1258690396
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1258690398}
+  - component: {fileID: 1258690397}
+  m_Layer: 0
+  m_Name: YandexGameD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &1258690397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258690396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 404d6214ebdd58d43a94c7ed650dc2f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infoYG: {fileID: 11400000, guid: 162644796a8b0d044bce3d6fda0641e3, type: 2}
+  singleton: 0
+  ResolvedAuthorization:
+    m_PersistentCalls:
+      m_Calls: []
+  RejectedAuthorization:
+    m_PersistentCalls:
+      m_Calls: []
+  OpenFullscreenAd:
+    m_PersistentCalls:
+      m_Calls: []
+  CloseFullscreenAd:
+    m_PersistentCalls:
+      m_Calls: []
+  ErrorFullscreenAd:
+    m_PersistentCalls:
+      m_Calls: []
+  OpenVideoAd:
+    m_PersistentCalls:
+      m_Calls: []
+  CloseVideoAd:
+    m_PersistentCalls:
+      m_Calls: []
+  RewardVideoAd:
+    m_PersistentCalls:
+      m_Calls: []
+  ErrorVideoAd:
+    m_PersistentCalls:
+      m_Calls: []
+  PurchaseSuccess:
+    m_PersistentCalls:
+      m_Calls: []
+  PurchaseFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  PromptDo:
+    m_PersistentCalls:
+      m_Calls: []
+  PromptFail:
+    m_PersistentCalls:
+      m_Calls: []
+  ReviewDo:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1258690398
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258690396}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.239, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -714,3 +802,4 @@ SceneRoots:
   - {fileID: 1233816476}
   - {fileID: 1236696076}
   - {fileID: 886317864}
+  - {fileID: 1258690398}
