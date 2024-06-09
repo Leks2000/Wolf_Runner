@@ -39,8 +39,6 @@ public class PlayerManager : MonoBehaviour
 
     private bool reviewRequested = false;
     [SerializeField]
-    private PositionManager positionManager;
-    [SerializeField]
     AudioManager audioManager;
 
 
@@ -55,14 +53,6 @@ public class PlayerManager : MonoBehaviour
         Time.timeScale = 1;
         isGameStarted = false;
         numberOfCoins = 0;
-
-        if (!reviewRequested && YandexGame.SDKEnabled && gameOver && Score >= 25)
-        {
-            PlayerPrefs.SetInt("ReviewRequested", 1);
-            YandexGame.ReviewShow(true);
-            PlayerPrefs.Save();
-        }
-
     }
 
     void Update()
@@ -85,6 +75,12 @@ public class PlayerManager : MonoBehaviour
                     RewardBtn.SetActive(true);
                 alreadyDone = true;
                 YandexGame.NewLeaderboardScores(ScoreTable, Score);
+                if (!reviewRequested && YandexGame.SDKEnabled && Score >= 25)
+                {
+                    PlayerPrefs.SetInt("ReviewRequested", 1);
+                    YandexGame.ReviewShow(true);
+                    PlayerPrefs.Save();
+                }
             }
         }
         if (YandexGame.EnvironmentData.language == "ru")

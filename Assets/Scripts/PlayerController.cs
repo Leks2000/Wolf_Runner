@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     private void TurnLeft()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || SwipeManager.swipeLeft)
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A )|| SwipeManager.swipeLeft)
         {
             FindObjectOfType<AudioManager>().PlaySound("Turn");
 
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     private void TurnRight()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow) || SwipeManager.swipeRight)
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || SwipeManager.swipeRight)
         {
             FindObjectOfType<AudioManager>().PlaySound("Turn");
 
@@ -83,14 +83,14 @@ public class PlayerController : MonoBehaviour
         if (controller.isGrounded)
         {
             direction.y = -1;
-            if (Input.GetKeyDown(KeyCode.UpArrow) || SwipeManager.swipeUp)
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || SwipeManager.swipeUp)
                 Jump();
         }
         else
         {
             direction.y += gravity * Time.deltaTime;
 
-            if (Input.GetKeyDown(KeyCode.DownArrow) || SwipeManager.swipeDown)
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || SwipeManager.swipeDown)
                 direction.y = -fallSpeed;
         }
     }
