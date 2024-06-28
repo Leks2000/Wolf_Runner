@@ -16,8 +16,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private GameObject MenuPanel;
     [SerializeField]
-    private GameObject MenuBtn;
-    [SerializeField]
     private GameObject RewardBtn;
 
     public static bool isGameStarted;
@@ -37,10 +35,8 @@ public class PlayerManager : MonoBehaviour
     bool alreadyDone = false;
     bool TouchedToStart = false;
 
-    private bool reviewRequested = false;
     [SerializeField]
     AudioManager audioManager;
-
 
     void Start()
     {
@@ -74,13 +70,9 @@ public class PlayerManager : MonoBehaviour
                 if (numberOfCoins > 0)
                     RewardBtn.SetActive(true);
                 alreadyDone = true;
-                YandexGame.NewLeaderboardScores(ScoreTable, Score);
-                if (!reviewRequested && YandexGame.SDKEnabled && Score >= 25)
-                {
-                    PlayerPrefs.SetInt("ReviewRequested", 1);
-                    YandexGame.ReviewShow(true);
-                    PlayerPrefs.Save();
-                }
+
+                // Обновляем и сохраняем рекорд
+                UpdateHighScore(Score);
             }
         }
         if (YandexGame.EnvironmentData.language == "ru")
@@ -150,11 +142,13 @@ public class PlayerManager : MonoBehaviour
         YandexGame.FullscreenShow();
         LoadingManager.LoadingScene("Runner");
     }
+
     public void OpenMenu()
     {
         SaveDiamonds();
         LoadingManager.LoadingScene("MainMenu");
     }
+
     public void Pause()
     {
         Time.timeScale = 0f;
@@ -166,9 +160,9 @@ public class PlayerManager : MonoBehaviour
         Time.timeScale = 1f;
         MenuPanel.SetActive(false);
     }
+
     private IEnumerator StartGame()
     {
-
         if (SwipeManager.tap)
         {
             if (!isGameStarted & !TouchedToStart)
@@ -184,20 +178,31 @@ public class PlayerManager : MonoBehaviour
                 isGameStarted = true;
 
                 Destroy(startingText);
-
-                yield return new WaitForSeconds(2f);
-
-                MenuBtn.SetActive(true);
             }
         }
-
     }
+
     private void SaveDiamonds()
     {
         Diamonds += PlayerPrefs.GetInt("Diamonds");
         PlayerPrefs.SetInt("Diamonds", Diamonds);
         PlayerPrefs.Save();
     }
+
+    private void UpdateHighScore(int currentScore)
+    {
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+
+        if (currentScore > highScore)
+        {
+            PlayerPrefs.SetInt("HighScore", currentScore);
+            PlayerPrefs.Save();
+
+            // Отправляем новый рекорд в таблицу лидеров
+            YandexGame.NewLeaderboardScores(ScoreTable, currentScore);
+        }
+    }
+
     private void OnApplicationQuit()
     {
         SaveDiamonds();

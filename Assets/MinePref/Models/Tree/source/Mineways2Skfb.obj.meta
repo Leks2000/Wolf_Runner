@@ -3,7 +3,32 @@ guid: a345272bf189fdd478a8ddffd59d2673
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CarpetMat
+    second: {fileID: 2100000, guid: 42f0bfd3784de9946bb68201274a465f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Colored_TerracottaMat
+    second: {fileID: 2100000, guid: 6999376b2252e024787183bda3873930, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Oak_LogMat
+    second: {fileID: 2100000, guid: 212f1209201e5f241957d7cd4f61710d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Spruce_StairsMat
+    second: {fileID: 2100000, guid: 6b0af52c29e3e9d4aace3fd58e6934f0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stained_Glass_PaneMat
+    second: {fileID: 2100000, guid: 25d3898ca0119744f8c0739b048e5fb5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

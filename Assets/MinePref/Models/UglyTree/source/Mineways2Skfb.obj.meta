@@ -3,7 +3,27 @@ guid: d058708c0bc22eb4d8de59a22820d760
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GrassMat
+    second: {fileID: 2100000, guid: 505a6b69cd3fcdf4e89d96cdad07c76a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Oak_LeavesMat
+    second: {fileID: 2100000, guid: a43b3054049b4034484d3dc90b87ab8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Oak_LogMat
+    second: {fileID: 2100000, guid: 5d86625dd569f7a4ca55c656c13f3f2a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stone_ButtonMat
+    second: {fileID: 2100000, guid: fdca6c72b5ee32f45a966f1261b024fe, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

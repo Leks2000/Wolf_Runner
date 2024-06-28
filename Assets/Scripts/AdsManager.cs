@@ -5,8 +5,6 @@ using YG;
 public class AdsManager : MonoBehaviour
 {
     [SerializeField]
-    private PositionManager positionManager;
-    [SerializeField]
     private PlayerManager playerManager;
 
     public void AdBtn()

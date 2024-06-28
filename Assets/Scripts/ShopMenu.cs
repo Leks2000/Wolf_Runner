@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+using YG;
 
 public class ShopMenu : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class ShopMenu : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI Diamonds;
 
-    private int[] defaultCharacterPrices = { 0, 250, 500, 1000 ,1500};
+    private int[] defaultCharacterPrices = { 0, 150, 500, 1500 ,3000};
 
     private void Start()
     {
@@ -110,9 +111,17 @@ public class ShopMenu : MonoBehaviour
     {
         if (priceText != null)
         {
+
             if (charactersPurchased[index])
             {
-                priceText.text = "";
+                if (YandexGame.EnvironmentData.language == "ru")
+                {
+                    priceText.text = "Выбрать";
+                }
+                else
+                {
+                    priceText.text = "Select";
+                }
             }
             else
             {

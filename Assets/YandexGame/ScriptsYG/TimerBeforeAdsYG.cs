@@ -66,8 +66,11 @@ public class TimerBeforeAdsYG : MonoBehaviour
 
     IEnumerator TimerAdShow()
     {
+        Time.timeScale = 0;
+        audioManager.PauseAudio();
         while (true)
         {
+
             if (objSecCounter < secondObjects.Length)
             {
                 for (int i2 = 0; i2 < secondObjects.Length; i2++)
@@ -91,8 +94,6 @@ public class TimerBeforeAdsYG : MonoBehaviour
                 while (!YandexGame.nowFullAd)
                     yield return null;
 
-                Time.timeScale = 0;
-                audioManager.PauseAudio();
                 RestartTimer();
                 yield break;
             }
